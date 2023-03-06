@@ -19,7 +19,7 @@ function App() {
 	const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
 	const [score, setScore] = useState(0);
 	const [gameOver, setGameOver] = useState(true);
-	console.log(questions);
+	// console.log(questions);
 	// -----------------------------
 	const startTrivia = async () => {
 		setLoading(true);
@@ -65,52 +65,80 @@ function App() {
 			setNumber(nextQuestion);
 		}
 	};
-	console.log(gameOver);
+	// console.log(gameOver);
 	return (
-		<div className="App  flex justify-center items-center">
-			<div className="w-1/2  bg-yellow-50 p-6 flex flex-col justify-center items-center">
-				<h1 className="p-6 ">QUIZZZZZZZ</h1>
-				{gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
-					<button
-						className="bg-green-300 hover:bg-green-500 p-2 mb-4 rounded"
-						onClick={startTrivia}
-					>
-						Start
-					</button>
-				) : null}
+		<div className="App h-[100vh] flex bg-black-dark text-gray-default">
+			<div className="w-[700px] mx-auto my-auto h-[95%] justify-around bg-black-light rounded-lg p-6 flex flex-col items-center">
+				<div className="w-full h-full text-center flex flex-col justify-between items-center">
+					<div>
+						<h1 className="p-6 font-dancing text-7xl mb-[] border-b border-b-gray-border text-[#dfe0fd]">
+							QUIZZZZ ????
+						</h1>
+					</div>
+					{gameOver ||
+					(userAnswers.length === TOTAL_QUESTIONS && !loading) ? (
+						<button
+							className="bg-green-300 hover:bg-green-500 p-2 mb-4 rounded"
+							onClick={startTrivia}
+						>
+							{userAnswers.length === TOTAL_QUESTIONS ? (
+								<p className="btn p-2 flex items-center justify-center rounded-lg">
+									Restart
+								</p>
+							) : (
+								<p className="btn p-2 flex items-center justify-center rounded-lg">
+									Start
+								</p>
+							)}
+						</button>
+					) : null}
 
-				{!gameOver && !loading ? (
-					<p>Score: {score}</p>
-				) : (
-					<p>Last score: {score}</p>
+					{!gameOver && !loading ? (
+						<p>
+							<span className="text-xl text-[#d8da89] mr-2">Score:</span>{" "}
+							<span className="text-2xl">{score}</span>
+						</p>
+					) : (
+						<p>
+							<span className="text-xl text-[#d8da89] mr-2">
+								Last score:{" "}
+							</span>{" "}
+							<span className="text-2xl">{score}</span>
+						</p>
+					)}
+				</div>
+
+				{/* Loading spinner */}
+				{loading && (
+					<div className="w-full h-full mb-[50px] flex flex-col items-center">
+						<p className="loading-spinner mt-4"></p>
+						<p className="mt-3">Loading questions...</p>
+					</div>
 				)}
 
-				{loading && <p className="p-4">Loading Questions....</p>}
-
-				{!loading &&
-					!gameOver &&
-					userAnswers.length !== TOTAL_QUESTIONS && (
-						<QuestionCard
-							questionNumber={number + 1}
-							totalQuestions={TOTAL_QUESTIONS}
-							question={questions[number].question}
-							answers={questions[number].answers}
-							userAnswer={userAnswers ? userAnswers[number] : undefined}
-							callback={checkAnswer}
-						/>
-					)}
+				{!loading && !gameOver && (
+					<QuestionCard
+						questionNumber={number + 1}
+						totalQuestions={TOTAL_QUESTIONS}
+						question={questions[number].question}
+						answers={questions[number].answers}
+						userAnswer={userAnswers ? userAnswers[number] : undefined}
+						callback={checkAnswer}
+					/>
+				)}
 
 				{!gameOver &&
-					number !== TOTAL_QUESTIONS - 1 &&
-					!loading &&
-					userAnswers.length === number + 1 && (
-						<button
-							onClick={nextQuestion}
-							className="bg-yellow-200 hover:bg-yellow-500 p-2 mt-4 rounded"
-						>
-							Next
-						</button>
-					)}
+				number !== TOTAL_QUESTIONS - 1 &&
+				!loading &&
+				userAnswers[number] !== undefined ? (
+					<button onClick={nextQuestion} className="rounded btn p-2 mt-4">
+						Next
+					</button>
+				) : (
+					<button className="h-[55px] w-[200px] p-2 mt-4 opacity-0">
+						Next
+					</button>
+				)}
 			</div>
 		</div>
 	);
